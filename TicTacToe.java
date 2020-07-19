@@ -1,5 +1,6 @@
 import java.util.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class TicTacToe {
     public static void main(String[] args) {
@@ -50,6 +51,15 @@ public class TicTacToe {
         System.out.println("| 6 | 7 | 8 |");
         System.out.println("             ");
 
+    }
+
+    public static int[] playerMove() {
+        Scanner input = new Scanner(System.in);
+        System.out.println("Enter your move ");
+        int move = input.nextInt();
+
+
+        return array;
     }
 }
 
