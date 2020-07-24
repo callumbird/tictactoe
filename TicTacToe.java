@@ -7,8 +7,9 @@ public class TicTacToe {
         System.out.println("Welcome to TicTacToe");
         //int[] gameMoveList = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
         //printBoard(gameMoveList);
-
+        ArrayList<Integer> gameList = new ArrayList<Integer>();
         gameCreation();
+        playerTurns(gameList);
     }
 
     public static void gameCreation() {
@@ -53,14 +54,51 @@ public class TicTacToe {
 
     }
 
-    public static int[] playerMove() {
+    public static int playerMove() {
         Scanner input = new Scanner(System.in);
         System.out.println("Enter your move ");
         int move = input.nextInt();
 
-
-        return array;
+        input.close();
+        return move;
     }
+
+    public static boolean checkMove(int move, ArrayList<Integer> gameList) {
+        boolean usedMove = false;
+        for (int i=0; i < gameList.length(); i++) {
+            if (move = gameList.get(i)) {
+                usedMove = true;
+            }
+        }
+
+        return usedMove;
+    }
+
+    public static ArrayList<Integer> playerTurns(ArrayList<Integer> gameList) {
+        
+        for (int turncount=0; turncount < 9; turncount++) {
+        int playerMove = playerMove();
+
+        boolean usedMove = checkMove(playerMove, gameList);
+
+        while (usedMove){
+            try{
+                playerMove = playerMove();
+                usedMove = checkMove(playerMove, gameList);
+                }
+                finally {}
+            }
+            
+            gameList = updateGameList(playerMove, gameList);
+        }
+   }
+
+    public static ArrayList<Integer> updateGameList(int playerMove, ArrayList<Integer> gameList) {
+        gameList.add(playerMove);
+        return gameList;
+    }
+
+    
 }
 
 
