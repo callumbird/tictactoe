@@ -37,22 +37,21 @@ public class TicTacToe {
                 input = playerInput("Your choice was invalid. Please choose again");
                 possibleChoice = checkLegalMove(input, availableMoves);
             }
-
             finally {
-                if (input == 1) {
-                    runHumanGame();
-                }
-                else {
-                    //runComputerGame();
-                }
             }
+        }
+        if (input == 1) {
+            runHumanGame();
+        }
+        else {
+            //runComputerGame();
         }
     }
 
     public static ArrayList<Integer> makeArrayList(int[] array) {
         ArrayList<Integer> arrayList = new ArrayList();
         for (int i=0; i<array.length; i++) {
-            arrayList.add(i);
+            arrayList.add(array[i]);
         }
         return arrayList;
     }
@@ -73,7 +72,7 @@ public class TicTacToe {
     }
 
     public static void runHumanGame() {
-        //initialise game list, which is the record of every player's move
+        //initialise game list, which is the record of every player's move and the list of possible moves
         int[] possibleMoves = {0,1,2,3,4,5,6,7,8};
         ArrayList<Integer> possibleMovesList = makeArrayList(possibleMoves);
         ArrayList<Integer> gameList = new ArrayList<Integer>();
@@ -94,17 +93,26 @@ public class TicTacToe {
                     legalMove = checkLegalMove(playerMove, possibleMovesList);
                 }
                 finally {
-                gameList.add(playerMove);
                 }
             }
+            
+            gameList.add(playerMove);
+            possibleMovesList = updatePossibleMovesList(playerMove, possibleMovesList);
 
             printBoard(gameList);
-            if(turns > 4){
+            if(turns > 3){
                 checkWin(gameList);
             }
         }
 
         System.out.println("Draw: no one wins this game.");
+    }
+
+    public static ArrayList<Integer> updatePossibleMovesList(int playerMove, ArrayList<Integer> possibleMovesList) {
+        int indexPosition = possibleMovesList.indexOf(playerMove);
+        possibleMovesList.remove(indexPosition);
+
+        return possibleMovesList;
     }
 
     public static int playerInput(String message) {
@@ -174,9 +182,8 @@ public class TicTacToe {
     }
 
     public static boolean checkAllCases(ArrayList<Integer> playerMoveList){
+        boolean win = false;
         for (int i=0; i<8; i++){
-            boolean win = false;
-
             switch(i) {
                 case 0:
                         if(playerMoveList.contains(0) && playerMoveList.contains(1) && playerMoveList.contains(2)){
