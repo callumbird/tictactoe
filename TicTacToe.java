@@ -62,7 +62,7 @@ public class TicTacToe {
     }
 
     public static ArrayList<Integer> makeArrayList(int[] array) {
-        ArrayList<Integer> arrayList = new ArrayList();
+        ArrayList<Integer> arrayList = new ArrayList<>();
         for (int i=0; i<array.length; i++) {
             arrayList.add(array[i]);
         }
@@ -205,15 +205,7 @@ public class TicTacToe {
     public static int playerInput(String message) {
         Scanner input = new Scanner(System.in);
         System.out.println(message);
-
         return input.nextInt();
-    }
-
-    public static int playerInputException(String message) {
-        Scanner input = new Scanner(System.in);
-        System.out.println(message);
-
-        return input.next();
     }
 
     public static void printBoard(ArrayList<Integer> gameMoveList) {
