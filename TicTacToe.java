@@ -37,19 +37,28 @@ public class TicTacToe {
     }
 
     public static int checkPlayerChoice(String message, ArrayList<Integer> availableMoves) {
-        int input = playerInput(message);
-        boolean possibleChoice = checkLegalMove(input, availableMoves);
+        boolean possibleChoice = false;
+        String errorMessage = "Enter a valid number, please.";
+        int input = 0;
+
         while (!possibleChoice) {
             try {
-                input = playerInput("Your choice was invalid. Please choose again");
+                input = playerInput(message);
+                message = errorMessage;
                 possibleChoice = checkLegalMove(input, availableMoves);
             }
             catch (InputMismatchException ex) {
-                input = playerInput("You did not type a number. Please try again");
-                possibleChoice = checkLegalMove(input, availableMoves);
+                System.out.println("You entered something that wasn't a number.");
+                possibleChoice = false;
             }
         }
         return input;
+    }
+
+    public static boolean checkInput (String message, ArrayList<Integer> availableMoves) {
+        int input = playerInput(message);
+        boolean possibleChoice = checkLegalMove(input, availableMoves);
+        return possibleChoice;
     }
 
     public static ArrayList<Integer> makeArrayList(int[] array) {
@@ -136,40 +145,54 @@ public class TicTacToe {
         }
 
         while (!fullBoard) {
-                if (player1 == "Gregor") {
-                    move = gregorMove(possibleMoves);
-                }
-                else {
-                    move = playerInput("Enter your move");
-                    boolean legalMove = checkLegalMove(move, possibleMovesList);
-                    while(!legalMove) {
-                            move = playerInput("That is not a legal move. Please pick a new move ");
-                            legalMove = checkLegalMove(move, possibleMovesList);
-                    }  
-                }
+            if (player1 == "Gregor") {
+                move = gregorMove(possibleMovesList);
+            }
+            else {
+                move = checkPlayerChoice("Enter your move", possibleMovesList);
+            }  
+            gameList.add(move);
+            possibleMovesList = updatePossibleMovesList(move, possibleMovesList);
+            printBoard(gameList);
+            checkWin(gameList);
 
-                gameList.add(move);
-                possibleMovesList = updatePossibleMovesList(move, possibleMovesList);
-                checkWin(gameList);
+            fullBoard = checkFullBoard(gameList);
 
-                fullBoard = checkFullBoard(gameList);
-
-                if (player2 == "Gregor") {
-                    gregorMove();
-                }
-                else {
-                    playerMove();
-                }
+            if (player2 == "Gregor") {
+                move = gregorMove(possibleMovesList);
+            }
+            else {
+                move = checkPlayerChoice("Enter your move", possibleMovesList);
+            }
+            gameList.add(move);
+            possibleMovesList = updatePossibleMovesList(move, possibleMovesList);
+            printBoard(gameList);
+            checkWin(gameList);
 
             fullBoard = checkFullBoard(gameList);
         }
             
         System.out.println("Draw: no one wins this game.");
         System.exit(0);
-    } 
+    }
     
-    public static int gregorMove() {
-        return 1;
+    public static int gregorMove(ArrayList<Integer> possibleMovesList) {
+        int number = randomNumber(possibleMovesList.size());
+        int move = possibleMovesList.get(number);
+        return move;
+    }
+
+    public static boolean checkFullBoard(ArrayList<Integer> gameList) {
+        boolean fullBoard = false;
+        if (gameList.size() == 9) {
+            fullBoard = true;
+        }
+        return fullBoard;
+    }
+
+    public static void runMenerva() {
+        System.out.println("Menerva is still being developed. Thank you for your patience");
+        System.exit(0);
     }
 
     public static ArrayList<Integer> updatePossibleMovesList(int playerMove, ArrayList<Integer> possibleMovesList) {
