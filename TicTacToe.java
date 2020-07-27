@@ -15,37 +15,41 @@ public class TicTacToe {
     public static void introduction() {
         System.out.println("Welcome to TicTacToe");
         System.out.println("Each turn will be started with a print out of the current board state, which will look like this: ");
-        ArrayList<Integer> exampleGameMoveList = new ArrayList<Integer>();
-        exampleGameMoveList.add(0);
-        exampleGameMoveList.add(2);
-        exampleGameMoveList.add(4);
-        exampleGameMoveList.add(8);
+        int[] exampleGameMoveArray = {0,2,4,8};
+        ArrayList<Integer> exampleGameMoveList = makeArrayList(exampleGameMoveArray);
         printBoard(exampleGameMoveList);
         System.out.println("After this, each player will select a move to make using number keys 0-8, as shown below: ");
         printBoardExample();
     }
 
     public static void gameSet() {
-        int input = playerInput("Enter a number to select a game: \n1. Human vs Human \n2. Computer vs Human");
-
         int[] choices = {1,2};
         ArrayList<Integer> availableMoves = makeArrayList(choices);
         
+        int input = checkPlayerChoice("Enter a number to select a game: \n1. Human vs Human \n2. Computer vs Human", availableMoves);
+
+        if (input == 1) {
+            runHumanGame();
+        }
+        else {
+            runComputerGame();
+        }
+    }
+
+    public static int checkPlayerChoice(String message, ArrayList<Integer> availableMoves) {
+        int input = playerInput(message);
         boolean possibleChoice = checkLegalMove(input, availableMoves);
         while (!possibleChoice) {
             try {
                 input = playerInput("Your choice was invalid. Please choose again");
                 possibleChoice = checkLegalMove(input, availableMoves);
             }
-            finally {
+            catch (InputMismatchException ex) {
+                input = playerInput("You did not type a number. Please try again");
+                possibleChoice = checkLegalMove(input, availableMoves);
             }
         }
-        if (input == 1) {
-            runHumanGame();
-        }
-        else {
-            //runComputerGame();
-        }
+        return input;
     }
 
     public static ArrayList<Integer> makeArrayList(int[] array) {
@@ -72,10 +76,10 @@ public class TicTacToe {
     }
 
     public static void runHumanGame() {
-        //initialise game list, which is the record of every player's move and the list of possible moves
+        
         int[] possibleMoves = {0,1,2,3,4,5,6,7,8};
         ArrayList<Integer> possibleMovesList = makeArrayList(possibleMoves);
-        ArrayList<Integer> gameList = new ArrayList<Integer>();
+        ArrayList<Integer> gameList = new ArrayList<>();
         
         for (int turns = 0; turns<9; turns++){
             if (turns % 2 == 0) {
@@ -84,17 +88,8 @@ public class TicTacToe {
             else {
                 System.out.println("Player 2");
             }
-
-        int playerMove = playerInput("Enter your move");
-        boolean legalMove = checkLegalMove(playerMove, possibleMovesList);
-            while(!legalMove) {
-                try {
-                    playerMove = playerInput("That is not a legal move. Please pick a new move ");
-                    legalMove = checkLegalMove(playerMove, possibleMovesList);
-                }
-                finally {
-                }
-            }
+        
+            int playerMove = checkPlayerChoice("Enter your move", possibleMovesList);
             
             gameList.add(playerMove);
             possibleMovesList = updatePossibleMovesList(playerMove, possibleMovesList);
@@ -104,8 +99,77 @@ public class TicTacToe {
                 checkWin(gameList);
             }
         }
-
         System.out.println("Draw: no one wins this game.");
+    }
+
+    public static void runComputerGame() {
+        
+        int[] choices = {1,2};
+        ArrayList<Integer> availableMoves = makeArrayList(choices);
+        int opponentChoice = checkPlayerChoice("Pick an opponent to play against: \n1. Gregor\n2. Menerva", availableMoves);
+
+        if (opponentChoice == 1) {
+            runGregor();
+        }
+        else {
+            runMenerva();
+        }
+    }
+
+    public static void runGregor() {
+        int[] possibleMoves = {0,1,2,3,4,5,6,7,8};
+        ArrayList<Integer> possibleMovesList = makeArrayList(possibleMoves);
+        ArrayList<Integer> gameList = new ArrayList<>();
+        String player1 = "Player 1";
+        String player2 = "Player 2";
+        boolean fullBoard = false;
+        int move = 0;
+
+        int coinFlip = randomNumber(2);
+        if (coinFlip == 1) {
+            System.out.println("Gregor will go first");
+            player1 = "Gregor";
+        }
+        else {
+            System.out.println("Gregor will go second");
+            player2 = "Gregor";
+        }
+
+        while (!fullBoard) {
+                if (player1 == "Gregor") {
+                    move = gregorMove(possibleMoves);
+                }
+                else {
+                    move = playerInput("Enter your move");
+                    boolean legalMove = checkLegalMove(move, possibleMovesList);
+                    while(!legalMove) {
+                            move = playerInput("That is not a legal move. Please pick a new move ");
+                            legalMove = checkLegalMove(move, possibleMovesList);
+                    }  
+                }
+
+                gameList.add(move);
+                possibleMovesList = updatePossibleMovesList(move, possibleMovesList);
+                checkWin(gameList);
+
+                fullBoard = checkFullBoard(gameList);
+
+                if (player2 == "Gregor") {
+                    gregorMove();
+                }
+                else {
+                    playerMove();
+                }
+
+            fullBoard = checkFullBoard(gameList);
+        }
+            
+        System.out.println("Draw: no one wins this game.");
+        System.exit(0);
+    } 
+    
+    public static int gregorMove() {
+        return 1;
     }
 
     public static ArrayList<Integer> updatePossibleMovesList(int playerMove, ArrayList<Integer> possibleMovesList) {
@@ -118,9 +182,15 @@ public class TicTacToe {
     public static int playerInput(String message) {
         Scanner input = new Scanner(System.in);
         System.out.println(message);
-        int choice = input.nextInt();
 
-        return choice;
+        return input.nextInt();
+    }
+
+    public static int playerInputException(String message) {
+        Scanner input = new Scanner(System.in);
+        System.out.println(message);
+
+        return input.next();
     }
 
     public static void printBoard(ArrayList<Integer> gameMoveList) {
@@ -231,7 +301,7 @@ public class TicTacToe {
     }
 
     public static ArrayList<Integer> getPlayer1MoveList(ArrayList<Integer> gameList) {
-        ArrayList<Integer> player1MoveList = new ArrayList<Integer>();
+        ArrayList<Integer> player1MoveList = new ArrayList<>();
         for (int i=0; i<gameList.size(); i++){
             if (i % 2 == 0) {
                 player1MoveList.add(gameList.get(i));
@@ -241,7 +311,7 @@ public class TicTacToe {
     }
 
     public static ArrayList<Integer> getPlayer2MoveList(ArrayList<Integer> gameList) {
-        ArrayList<Integer> player2MoveList = new ArrayList<Integer>();
+        ArrayList<Integer> player2MoveList = new ArrayList<>();
         for (int i=0; i<gameList.size(); i++){
             if (i % 2 != 0) {
                 player2MoveList.add(gameList.get(i));
@@ -249,7 +319,8 @@ public class TicTacToe {
         }
         return player2MoveList;
     }
+
+    public static int randomNumber(int number) {
+        return (int)(Math.random()*number);
+    }
 }
-
-
-
