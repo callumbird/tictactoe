@@ -36,54 +36,6 @@ public class TicTacToe {
         }
     }
 
-    public static int checkPlayerChoice(String message, ArrayList<Integer> availableMoves) {
-        boolean possibleChoice = false;
-        String errorMessage = "Enter a valid number, please.";
-        int input = 0;
-
-        while (!possibleChoice) {
-            try {
-                input = playerInput(message);
-                message = errorMessage;
-                possibleChoice = checkLegalMove(input, availableMoves);
-            }
-            catch (InputMismatchException ex) {
-                System.out.println("You entered something that wasn't a number.");
-                possibleChoice = false;
-            }
-        }
-        return input;
-    }
-
-    public static boolean checkInput (String message, ArrayList<Integer> availableMoves) {
-        int input = playerInput(message);
-        boolean possibleChoice = checkLegalMove(input, availableMoves);
-        return possibleChoice;
-    }
-
-    public static ArrayList<Integer> makeArrayList(int[] array) {
-        ArrayList<Integer> arrayList = new ArrayList<>();
-        for (int i=0; i<array.length; i++) {
-            arrayList.add(array[i]);
-        }
-        return arrayList;
-    }
-
-    public static boolean checkLegalMove(int move, ArrayList<Integer> availableMoves) {
-        boolean possibleChoice = false;
-
-        if(availableMoves.contains(move)) {
-            possibleChoice = true;
-        }
-
-        return possibleChoice;
-    }
-
-    public static ArrayList<Integer> updateGameList(int playerMove, ArrayList<Integer> gameList) {
-        gameList.add(playerMove);
-        return gameList;
-    }
-
     public static void runHumanGame() {
         
         int[] possibleMoves = {0,1,2,3,4,5,6,7,8};
@@ -175,7 +127,55 @@ public class TicTacToe {
         System.out.println("Draw: no one wins this game.");
         System.exit(0);
     }
+
+    public static boolean checkInput (String message, ArrayList<Integer> availableMoves) {
+        int input = playerInput(message);
+        boolean possibleChoice = checkLegalMove(input, availableMoves);
+        return possibleChoice;
+    }
+
+    public static ArrayList<Integer> makeArrayList(int[] array) {
+        ArrayList<Integer> arrayList = new ArrayList<>();
+        for (int i=0; i<array.length; i++) {
+            arrayList.add(array[i]);
+        }
+        return arrayList;
+    }
+
+    public static boolean checkLegalMove(int move, ArrayList<Integer> availableMoves) {
+        boolean possibleChoice = false;
+
+        if(availableMoves.contains(move)) {
+            possibleChoice = true;
+        }
+
+        return possibleChoice;
+    }
+
+    public static ArrayList<Integer> updateGameList(int playerMove, ArrayList<Integer> gameList) {
+        gameList.add(playerMove);
+        return gameList;
+    }
+
+    public static int checkPlayerChoice(String message, ArrayList<Integer> availableMoves) {
+        boolean possibleChoice = false;
+        String errorMessage = "Enter a valid number, please.";
+        int input = 0;
     
+        while (!possibleChoice) {
+            try {
+                input = playerInput(message);
+                message = errorMessage;
+                possibleChoice = checkLegalMove(input, availableMoves);
+            }
+            catch (InputMismatchException ex) {
+                System.out.println("You entered something that wasn't a number.");
+                possibleChoice = false;
+            }
+        }
+        return input;
+    }
+
     public static int gregorMove(ArrayList<Integer> possibleMovesList) {
         int number = randomNumber(possibleMovesList.size());
         int move = possibleMovesList.get(number);
